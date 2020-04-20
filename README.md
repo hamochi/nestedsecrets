@@ -42,7 +42,7 @@ above would output:
 ```json
 {
   "service1_endpoint": "https://service1.myservice.com",
-  "service1": "lj453jk#€%#7569g0+"
+  "service1_key": "lj453jk#€%#7569g0+"
 }
 ```
 
