@@ -84,7 +84,7 @@ PUB_KEY="${pub_key.RAW}"
 PRIVATE_KEY="${private_key.RAW}"
 ````
 
-##Usage
+## Usage
 
 ```go
 package main
