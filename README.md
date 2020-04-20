@@ -96,6 +96,7 @@ import (
 	"log"
 )
 
+// service1_app from above example
 type Secrets struct {
 	DBUser     string `json:"db_username"`
 	DBPassword string `json:"db_password"`
