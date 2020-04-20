@@ -83,3 +83,38 @@ APP_NAME="My App"
 PUB_KEY="${pub_key.RAW}"
 PRIVATE_KEY="${private_key.RAW}"
 ````
+
+##Usage
+
+```go
+package main
+
+import (
+	"encoding/json"
+"fmt"
+	"log"
+	"github.com/hamochi/nestedsecrets"
+)
+
+type Secrets struct {
+    DBUser      string `json:"db_username"`
+    DBPassword  string `json:"db_password"`
+    APIKey      string `json:"api_key"`
+}
+
+func main() {
+    result, err := nestedsecrets.Load("service1_app")
+	if err != nil {
+		log.Fatal(err)
+	}
+    
+    var s Secrets
+    err = json.Unmarshal(result,&s)
+    if err != nil {
+		log.Fatal(err)
+	}
+
+
+	fmt.Printf("%+v",s)
+}
+```
