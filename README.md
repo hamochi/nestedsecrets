@@ -91,30 +91,29 @@ package main
 
 import (
 	"encoding/json"
-"fmt"
-	"log"
+	"fmt"
 	"github.com/hamochi/nestedsecrets"
+	"log"
 )
 
 type Secrets struct {
-    DBUser      string `json:"db_username"`
-    DBPassword  string `json:"db_password"`
-    APIKey      string `json:"api_key"`
+	DBUser     string `json:"db_username"`
+	DBPassword string `json:"db_password"`
+	APIKey     string `json:"api_key"`
 }
 
 func main() {
-    result, err := nestedsecrets.Load("service1_app")
+	result, err := nestedsecrets.Load("service1_app")
 	if err != nil {
 		log.Fatal(err)
 	}
-    
-    var s Secrets
-    err = json.Unmarshal(result,&s)
-    if err != nil {
+
+	var s Secrets
+	err = json.Unmarshal(result, &s)
+	if err != nil {
 		log.Fatal(err)
 	}
 
-
-	fmt.Printf("%+v",s)
+	fmt.Printf("%+v", s)
 }
 ```
