@@ -1,9 +1,8 @@
-# nestedsecrets
-A way to nest secrets in AWS secret manger. Import one secret into an other.
+# Nested Secrets
+A way to nest secrets in AWS secret manger. Embed one secret into an other.
 
-## Examples of nested secrets:
-
-#### Embed all or parts of secrets 
+## Usage
+#### Embed secrets 
 secret name: service1_db
 ```json
 {
@@ -12,37 +11,54 @@ secret name: service1_db
 }
 ```
 
-
 secret name: service1_app
 ```json
 {
-  "{service1_db}" : "",
+  "db_username" : "${service1_db.db_username}",
+  "db_password" : "${service1_db.db_password}",
   "api_key": "lj453jk#€%#7569g0+"
 }
 ```
 
-above would output:
+```go
+package main
+
+import (
+	"encoding/json"
+	"fmt"
+	"github.com/hamochi/nestedsecrets"
+	"log"
+)
+
+// service1_app from above example
+type Secrets struct {
+	DBUser     string `json:"db_username"`
+	DBPassword string `json:"db_password"`
+	APIKey     string `json:"api_key"`
+}
+
+func main() {
+	result, err := nestedsecrets.Load("service1_app")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	var s Secrets
+	err = json.Unmarshal(result, &s)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	fmt.Printf("%+v", s)
+}
+```
+
+output (in json):
 ```json
 {
   "db_username": "user1",
   "db_password": "jas3d90sf0%scdWE/sksj9",
   "api_key": "lj453jk#€%#7569g0+"
-}
-```
-
-secret name: service2
-```json
-{
-  "service1_endpoint": "https://service1.myservice.com",
-  "service1_key": "${service1_app.api_key}"
-}
-```
-
-above would output:
-```json
-{
-  "service1_endpoint": "https://service1.myservice.com",
-  "service1_key": "lj453jk#€%#7569g0+"
 }
 ```
 
@@ -84,8 +100,6 @@ PUB_KEY="${pub_key.RAW}"
 PRIVATE_KEY="${private_key.RAW}"
 ````
 
-## Usage
-
 ```go
 package main
 
@@ -96,25 +110,12 @@ import (
 	"log"
 )
 
-// service1_app from above example
-type Secrets struct {
-	DBUser     string `json:"db_username"`
-	DBPassword string `json:"db_password"`
-	APIKey     string `json:"api_key"`
-}
-
 func main() {
-	result, err := nestedsecrets.Load("service1_app")
+	result, err := nestedsecrets.Load("envfile")
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	var s Secrets
-	err = json.Unmarshal(result, &s)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	fmt.Printf("%+v", s)
+	fmt.Println(string(result))
 }
 ```
